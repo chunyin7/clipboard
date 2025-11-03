@@ -1,0 +1,56 @@
+use crate::models::ClipboardEntry;
+use chrono::Local;
+use objc2_app_kit::{NSPasteboard, NSPasteboardTypeString};
+use objc2_foundation::run_on_main;
+use std::{
+    sync::{Arc, Mutex},
+    thread,
+    time::Duration,
+};
+
+pub struct ClipboardMonitor {
+    history: Arc<Mutex<Vec<ClipboardEntry>>>,
+}
+
+impl ClipboardMonitor {
+    pub fn spawn(self) {
+        thread::spawn(move || {
+            let mut last_change_count = get_pasteboard_change_count();
+
+            loop {
+                thread::sleep(Duration::from_millis(100));
+                let current_change_count = get_pasteboard_change_count();
+                if current_change_count != last_change_count {
+                    if let Some(content) = get_pasteboard_content() {
+                        let mut history = self.history.lock().unwrap();
+                        if history.len() >= 20 {
+                            history.truncate(19);
+                        }
+                        history.insert(
+                            0,
+                            ClipboardEntry {
+                                content,
+                                timestamp: Local::now(),
+                            },
+                        );
+                    }
+                    last_change_count = current_change_count;
+                }
+            }
+        });
+    }
+}
+
+fn get_pasteboard_change_count() -> isize {
+    run_on_main(|_mtm| unsafe { NSPasteboard::generalPasteboard().changeCount() })
+}
+
+fn get_pasteboard_content() -> Option<String> {
+    run_on_main(|_mtm| unsafe {
+        let pasteboard = NSPasteboard::generalPasteboard();
+        match pasteboard.stringForType(NSPasteboardTypeString) {
+            None => return None,
+            Some(ns_string) => return Some(ns_string.to_string()),
+        };
+    })
+}
