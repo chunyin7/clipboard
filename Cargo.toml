@@ -5,7 +5,39 @@ edition = "2024"
 
 [dependencies]
 chrono = "0.4.42"
-global-hotkey = "0.7.0"
+global-hotkey = "0.7"
 objc2 = "0.6.3"
-objc2-app-kit = { version = "0.2", features = ["NSPasteboard"] }
-objc2-foundation = { version = "0.2", features = ["NSThread", "dispatch"] }
+objc2-app-kit = { version = "0.3.2", default-features = false, features = [
+"NSApplication",
+"NSWindow",
+"NSResponder",
+"NSControl",
+"NSView",
+"NSPanel",
+"NSButton",
+"NSStatusBar", "NSStatusItem", "NSMenu", "NSMenuItem",
+"NSTextView",
+"NSPasteboard",
+"NSWorkspace",
+"NSGraphics",
+"NSScreen",
+"NSTableView", "NSTableColumn", "NSTableHeaderView",
+"NSScrollView", "NSClipView"
+] }
+objc2-foundation = { version = "0.3.2", default-features = false, features = [
+"NSThread",
+"bitflags",
+"NSArray",
+"NSCoder",
+"NSDictionary",
+"NSEnumerator",
+"NSGeometry",
+"NSIndexSet",
+"NSNotification",
+"NSObject",
+"NSRange",
+"NSSortDescriptor",
+"NSString",
+"NSURL",
+] }
+dispatch2 = { version = "0.3", default-features = false, features = ["alloc", "objc2"] }
