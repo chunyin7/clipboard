@@ -3,7 +3,7 @@ use global_hotkey::{
     GlobalHotKeyEvent, GlobalHotKeyManager, HotKeyState,
     hotkey::{Code, HotKey, Modifiers},
 };
-use objc2_app_kit::NSApplication;
+use objc2_app_kit::{NSApplication, NSApplicationActivationPolicy};
 use std::sync::{Arc, Mutex};
 
 use crate::{models::History, monitor::ClipboardMonitor, panel::init_panel};
@@ -32,6 +32,7 @@ fn main() {
     GlobalHotKeyEvent::set_event_handler(Some(move |event: GlobalHotKeyEvent| {
         if event.state == HotKeyState::Pressed {
             panel_for_hotkey.get_on_main(|panel| panel.toggle());
+            println!("Pressed");
         }
     }));
 
@@ -39,7 +40,8 @@ fn main() {
     panel_bound.get_on_main(|panel| panel.refresh_history());
 
     run_on_main(|mtm| {
-        let app = unsafe { NSApplication::sharedApplication(mtm) };
-        unsafe { app.run() };
+        let app = NSApplication::sharedApplication(mtm);
+        let _ = app.setActivationPolicy(NSApplicationActivationPolicy::Regular);
+        app.run();
     });
 }

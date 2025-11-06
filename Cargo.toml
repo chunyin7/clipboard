@@ -15,14 +15,22 @@ objc2-app-kit = { version = "0.3.2", default-features = false, features = [
 "NSView",
 "NSPanel",
 "NSButton",
+"NSColor",
+"NSFont",
 "NSStatusBar", "NSStatusItem", "NSMenu", "NSMenuItem",
 "NSTextView",
+"NSTableCellView",
+"NSTextField", "NSTextFieldCell",
 "NSPasteboard",
 "NSWorkspace",
 "NSGraphics",
 "NSScreen",
 "NSTableView", "NSTableColumn", "NSTableHeaderView",
-"NSScrollView", "NSClipView"
+"NSScrollView", "NSClipView", "NSUserInterfaceItemIdentification",
+"NSParagraphStyle",
+"objc2-quartz-core",
+"NSRunningApplication",
+"objc2-core-foundation"
 ] }
 objc2-foundation = { version = "0.3.2", default-features = false, features = [
 "NSThread",
@@ -40,4 +48,5 @@ objc2-foundation = { version = "0.3.2", default-features = false, features = [
 "NSString",
 "NSURL",
 ] }
+objc2-quartz-core = { version = "0.3.2", default-features = false, features = ["CALayer", "objc2-core-foundation"] }
 dispatch2 = { version = "0.3", default-features = false, features = ["alloc", "objc2"] }
